@@ -159,11 +159,15 @@ public:
     }
     Status H2DAsync(std::byte* dst, const std::byte* src, const size_t count) override
     {
-        return CUDA_API(cudaMemcpyAsync, dst, src, count, cudaMemcpyHostToDevice, this->stream_);
+        return CudaApi(__FUNCTION__, __FILE__, __LINE__, "cudaMemcpyAsync",
+                       static_cast<cudaError_t(*)(void*, const void*, size_t, cudaMemcpyKind, cudaStream_t)>(cudaMemcpyAsync),
+                       dst, src, count, cudaMemcpyHostToDevice, this->stream_);
     }
     Status D2HAsync(std::byte* dst, const std::byte* src, const size_t count) override
     {
-        return CUDA_API(cudaMemcpyAsync, dst, src, count, cudaMemcpyDeviceToHost, this->stream_);
+        return CudaApi(__FUNCTION__, __FILE__, __LINE__, "cudaMemcpyAsync",
+                       static_cast<cudaError_t(*)(void*, const void*, size_t, cudaMemcpyKind, cudaStream_t)>(cudaMemcpyAsync),
+                       dst, src, count, cudaMemcpyDeviceToHost, this->stream_);
     }
     Status AppendCallback(std::function<void(bool)> cb) override
     {
